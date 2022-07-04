@@ -1,3 +1,4 @@
+print('START OF CMD')
 local Players = game:GetService('Players')
 local LocalPlayer = Players.LocalPlayer
 
@@ -87,3 +88,4 @@ Players.PlayerAdded:Connect(AddConnection)
 for _, v in ipairs(Players:GetPlayers()) do
     AddConnection(v)
 end
+print('END OF CMD')
